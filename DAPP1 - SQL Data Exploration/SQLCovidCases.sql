@@ -63,20 +63,30 @@ FROM PortfolioProjekt..CovidDeaths
 WHERE continent IS NOT NULL
 GROUP BY continent
 
---CONTINENT IS NULL IS NOT NULL
-SELECT continent, MAX(population) AS Popultion, MAX(CAST(total_deaths AS INT)) AS TotalDeaths, ROUND(MAX(CAST(total_deaths AS INT))/MAX(population),4) AS DeathPercentage
+--CONTINENT (World population number not correct)
+/*SELECT continent, MAX(population) AS Popultion, MAX(CAST(total_deaths AS INT)) AS TotalDeaths, ROUND(MAX(CAST(total_deaths AS INT))/MAX(population),4) AS DeathPercentage
 FROM PortfolioProjekt..CovidDeaths
 WHERE  continent IS NOT NULL 
 GROUP BY continent
-ORDER BY 4 DESC
+ORDER BY 4 DESC*/
 
-SELECT continent, MAX(population) AS Popultion, MAX(CAST(total_deaths AS INT)) AS TotalDeaths, ROUND(MAX(CAST(total_deaths AS INT))/MAX(population),4) AS DeathPercentage
+SELECT location, MAX(population) AS Popultion, MAX(CAST(total_deaths AS INT)) AS TotalDeaths, ROUND(MAX(CAST(total_deaths AS INT))/MAX(population),4) AS DeathPercentage
 FROM PortfolioProjekt..CovidDeaths
-WHERE  continent IS NULL 
-GROUP BY continent
+WHERE  location = 'World'
+GROUP BY continent, location
 ORDER BY 4 DESC
 
---LOCATION WHERE CONTINENT IS NULL ÉS IS NOT NULL
+SELECT SUM(Popultion)
+From (
+Select MAX(population) AS Popultion
+FROM PortfolioProjekt..CovidDeaths
+WHERE  continent IS NULL AND location <> 'WORLD' AND location <> 'European Union' AND location <> 'High income'
+AND location <> 'Upper middle income' AND location <> 'Lower middle income' AND location <> 'Low income'
+AND location <> 'International'
+GROUP BY location) t
+
+
+
 SELECT location, MAX(population) AS Popultion, MAX(CAST(total_deaths AS INT)) AS TotalDeaths, ROUND(MAX(CAST(total_deaths AS INT))/MAX(population),4) AS DeathPercentage
 FROM PortfolioProjekt..CovidDeaths
 WHERE  continent IS NULL AND location <> 'WORLD' AND location <> 'European Union' AND location <> 'High income'
@@ -85,7 +95,7 @@ AND location <> 'International'
 GROUP BY location
 ORDER BY 4 DESC
 
--- EZ A JO
+
 SELECT  Location, MAX(population) AS Popultion, MAX(CAST(total_deaths AS INT)) AS TotalDeaths, ROUND(MAX(CAST(total_deaths AS INT))/MAX(population),4) AS DeathPercentage
 FROM PortfolioProjekt..CovidDeaths
 WHERE continent IS NULL AND location <> 'European Union' AND location <> 'High income'
